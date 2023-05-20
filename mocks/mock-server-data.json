@@ -1,0 +1,118 @@
+{
+  "api": {
+    "titles": [
+      "Название фильма 1",
+      "Название фильма 2",
+      "Название фильма 3",
+      "Название фильма 4",
+      "Название фильма 5",
+      "Название фильма 6"
+    ],
+    "descriptions": [
+      "Описание фильма 1",
+      "Описание фильма 2",
+      "Описание фильма 3",
+      "Описание фильма 4",
+      "Описание фильма 5",
+      "Описание фильма 6"
+    ],
+    "realiseDates": [
+      "2000",
+      "2001",
+      "2002",
+      "2003",
+      "2004",
+      "2005"
+    ],
+    "rating": [ 1, 2, 3, 4, 5, 6],
+    "previewsVideo": [
+      "https://loremflickr.com/320/240/dog",
+      "https://loremflickr.com/320/240/cat",
+      "https://loremflickr.com/320/240/bird",
+      "https://loremflickr.com/320/240/hamster",
+      "https://loremflickr.com/320/240/rabbit",
+      "https://loremflickr.com/320/240/horse"
+    ],
+    "videoLinks": [
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
+    ],
+    "actors": [
+      ["Главный герой мужчина 1", "Главный герой женщина 1", "Второстепенный герой мужчина 1", "Второстепенный герой женщина 1"],
+      ["Главный герой мужчина 2", "Главный герой женщина 2", "Второстепенный герой мужчина 2", "Второстепенный герой женщина 2"],
+      ["Главный герой мужчина 3", "Главный герой женщина 3", "Второстепенный герой мужчина 3", "Второстепенный герой женщина 3"],
+      ["Главный герой мужчина 4", "Главный герой женщина 4", "Второстепенный герой мужчина 4", "Второстепенный герой женщина 4"],
+      ["Главный герой мужчина 5", "Главный герой женщина 5", "Второстепенный герой мужчина 5", "Второстепенный герой женщина 5"],
+      ["Главный герой мужчина 6", "Главный герой женщина 6", "Второстепенный герой мужчина 6", "Второстепенный герой женщина 6"]
+    ],
+    "directors": [
+      "Режиссер 1",
+      "Режиссер 2",
+      "Режиссер 3",
+      "Режиссер 4",
+      "Режиссер 5",
+      "Режиссер 6"
+    ],
+    "durations": [ 30, 40, 50, 60, 70, 80 ],
+    "userNames": [
+      "Имя пользователя 1",
+      "Имя пользователя 2",
+      "Имя пользователя 3",
+      "Имя пользователя 4",
+      "Имя пользователя 5",
+      "Имя пользователя 6"
+    ],
+    "userAvatars": [
+      "https://loremflickr.com/320/240/man",
+      "https://loremflickr.com/320/240/woman",
+      "https://loremflickr.com/320/240/man",
+      "https://loremflickr.com/320/240/woman",
+      "https://loremflickr.com/320/240/man",
+      "https://loremflickr.com/320/240/woman"
+    ],
+    "userEmails": [
+      "user1@ya.ru",
+      "user2@ya.ru",
+      "user3@ya.ru",
+      "user4@ya.ru",
+      "user5@ya.ru",
+      "user6@ya.ru"
+    ],
+    "userPasswords": [
+      "password1",
+      "password2",
+      "password3",
+      "password4",
+      "password5",
+      "password6"
+    ],
+    "posters": [
+      "https://loremflickr.com/320/240/dog",
+      "https://loremflickr.com/320/240/cat",
+      "https://loremflickr.com/320/240/bird",
+      "https://loremflickr.com/320/240/hamster",
+      "https://loremflickr.com/320/240/rabbit",
+      "https://loremflickr.com/320/240/horse"
+    ],
+    "backgroundImages": [
+      "https://loremflickr.com/g/1920/1080/paris",
+      "https://loremflickr.com/g/1920/1080/paris",
+      "https://loremflickr.com/g/1920/1080/paris",
+      "https://loremflickr.com/g/1920/1080/paris",
+      "https://loremflickr.com/g/1920/1080/paris",
+      "https://loremflickr.com/g/1920/1080/paris"
+    ],
+    "backgroundColors": [
+      "#000",
+      "#34f",
+      "#f00",
+      "#ff0",
+      "#0f0",
+      "#00f"
+    ]
+  }
+}
