@@ -1,7 +1,7 @@
-import {FilmGeneratorInterface} from './film-generator.interface';
-import type {MockData} from '../../types/mock-data.type';
-import {generateRandomValue, getRandomItem, getRandomItems} from '../../core/helpers';
-import {Genre} from '../../types/film.type';
+import {FilmGeneratorInterface} from './film-generator.interface.js';
+import type {MockData} from '../../types/mock-data.type.js';
+import {generateRandomValue, getRandomItem, getRandomItems} from '../../core/helpers/index.js';
+import {Genre} from '../../types/film.type.js';
 import dayjs from 'dayjs';
 
 enum MathDayWeek {

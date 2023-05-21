@@ -9,6 +9,6 @@ import GenerateCommand from './core/cli-command/generate.command.js';
 const cliManager = new CLIApplication();
 cliManager.registerCommands([
   new HelpCommand, new VersionCommand,
-  new ImportCommand, new GenerateCommand
+  new ImportCommand, new GenerateCommand(),
 ]);
 cliManager.processCommand(process.argv);

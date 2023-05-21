@@ -2,13 +2,13 @@ import {CliCommandInterface} from './cli-command.interface';
 import {MockData} from '../../types/mock-data.type';
 import got from 'got';
 import FilmGenerator from '../../modules/film-generator/film-generator.js';
-import {appendFile} from 'node:fs/promises';
+import TSVFileWriter from '../file-writer/tsv-file-writer.js';
 
 type GenerateExecuteParameters = [string, string, string]
 
 export default class GenerateCommand implements CliCommandInterface {
   public readonly name: string = '--generate';
-  private initialData: MockData;
+  private initialData: MockData | undefined;
 
   public async execute(...parameters: GenerateExecuteParameters): Promise<void> {
     const [count, filepath, url] = parameters;
@@ -20,10 +20,15 @@ export default class GenerateCommand implements CliCommandInterface {
       console.error(`Can't fetch data from${url}`);
     }
 
+    if (!this.initialData) {
+      return;
+    }
+
     const filmGeneratorString = new FilmGenerator(this.initialData);
+    const tsvFileWriter = new TSVFileWriter(filepath);
 
     for (let i = 0; i < filmCount; i++) {
-      await appendFile(filepath, `${filmGeneratorString.generate()}\n`, 'utf-8');
+      await tsvFileWriter.write(filmGeneratorString.generate());
     }
 
     console.log(`File ${filepath} successfully generated`);
