@@ -1,4 +1,6 @@
+import {CommandName} from './command-name.enum.js';
+
 export interface CliCommandInterface {
-  readonly name: string;
-  execute(...parameters: string[]): void;
+  readonly name: CommandName;
+  execute(...parameters: CommandName[]): void;
 }
