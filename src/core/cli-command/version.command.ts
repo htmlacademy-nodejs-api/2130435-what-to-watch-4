@@ -1,9 +1,10 @@
-import { CliCommandInterface } from './cli-command.interface';
+import {CliCommandInterface} from './cli-command.interface';
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
+import {CommandName} from './command-name.enum.js';
 
 export default class VersionCommand implements CliCommandInterface {
-  public readonly name: string = '--version';
+  public readonly name: CommandName = CommandName.Version;
 
   private readVersion(): string {
     const contentPageJSON = readFileSync(path.resolve('./package.json'), 'utf-8');

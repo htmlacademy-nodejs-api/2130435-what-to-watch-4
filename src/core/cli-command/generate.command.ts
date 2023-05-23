@@ -3,11 +3,12 @@ import {MockData} from '../../types/mock-data.type';
 import got from 'got';
 import FilmGenerator from '../../modules/film-generator/film-generator.js';
 import TSVFileWriter from '../file-writer/tsv-file-writer.js';
+import {CommandName} from './command-name.enum.js';
 
 type GenerateExecuteParameters = [string, string, string]
 
 export default class GenerateCommand implements CliCommandInterface {
-  public readonly name: string = '--generate';
+  public readonly name: CommandName = CommandName.Generate;
   private initialData: MockData | undefined;
 
   public async execute(...parameters: GenerateExecuteParameters): Promise<void> {
