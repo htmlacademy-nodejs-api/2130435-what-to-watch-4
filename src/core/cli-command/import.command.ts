@@ -1,22 +1,29 @@
 import {CliCommandInterface} from './cli-command.interface';
+import {createFilm, getErrorMessage} from '../helpers/index.js';
 import TSVFileReader from '../file-reader/tsv-file-reader.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name: string = '--import';
-  public execute(filename: string): void {
+
+  private onLine(line: string) {
+    const offer = createFilm(line);
+    console.log(offer);
+  }
+
+  private onComplete(count: number) {
+    console.log(`${count} rows imported.`);
+  }
+
+  public async execute(filename: string): Promise<void> {
     const fileReader = new TSVFileReader(filename.trim());
 
-    try {
-      fileReader.read();
-      console.log(fileReader.toArray());
-    } catch (err) {
-      if (err instanceof Error) {
-        throw err;
-      }
+    fileReader.on('line', this.onLine);
+    fileReader.on('end', this.onComplete);
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      console.error(`Не удалось импортировать данные из файла из-за ошибки: ${err.message}`);
+    try {
+      await fileReader.read();
+    } catch(err) {
+      console.log(`Can't read the file: ${getErrorMessage(err)}`);
     }
   }
 }

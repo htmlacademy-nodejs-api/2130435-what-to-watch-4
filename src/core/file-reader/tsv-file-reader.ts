@@ -1,61 +1,37 @@
 import { FileReaderInterface } from './file-reader.interface';
-import {readFileSync} from 'node:fs';
-import {Film} from '../../types/film.type';
+import EventEmitter from 'node:events';
+import {createReadStream} from 'node:fs';
 
-export default class TSVFileReader implements FileReaderInterface {
-  private rawData = '';
+const CHUNK_SIZE = 2 ** 14; //16kb
 
-  constructor(
-    public filename: string
-  ) {}
+export default class TSVFileReader extends EventEmitter implements FileReaderInterface {
 
-  public read(): void {
-    this.rawData = readFileSync(this.filename, {encoding: 'utf-8'});
+  constructor(public filename: string) {
+    super();
   }
 
-  public toArray(): Film[] {
-    if (!this.rawData) {
-      return [];
+  public async read(): Promise<void> {
+    const stream = createReadStream(this.filename,{
+      highWaterMark: CHUNK_SIZE,
+      encoding: 'utf-8'
+    });
+
+    let remainingData = '';
+    let nextLinePosition = -1;
+    let importedRowCount = 0;
+
+    for await (const chunk of stream) {
+      remainingData += chunk.toString();
+
+      while ((nextLinePosition = remainingData.indexOf('\n')) >= 0) {
+        const completeRow = remainingData.slice(0, nextLinePosition + 1);
+        remainingData = remainingData.slice(++nextLinePosition);
+        importedRowCount++;
+
+        this.emit('line', completeRow);
+      }
     }
 
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim() !== '')
-      .map((line) => line.split('\t'))
-      .map(([
-        title,
-        description,
-        publicationDate,
-        genre,
-        realiseDate,
-        rating,
-        previewVideo,
-        videoLink,
-        actors,
-        director,
-        duration,
-        name,
-        email,
-        password,
-        poster,
-        backgroundImage,
-        backgroundColor,
-      ]) => ({
-        title,
-        description,
-        publicationDate: new Date(publicationDate),
-        genre: genre.split(','),
-        realiseDate,
-        rating,
-        previewVideo,
-        videoLink,
-        actors: actors.split(','),
-        director,
-        duration,
-        user: {name, email, password},
-        poster,
-        backgroundImage,
-        backgroundColor,
-      }) as unknown as Film);
+    this.emit('end', importedRowCount);
   }
 }
