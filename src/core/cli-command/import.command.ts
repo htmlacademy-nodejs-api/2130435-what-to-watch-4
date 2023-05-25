@@ -1,9 +1,10 @@
 import {CliCommandInterface} from './cli-command.interface';
 import {createFilm, getErrorMessage} from '../helpers/index.js';
 import TSVFileReader from '../file-reader/tsv-file-reader.js';
+import {CommandName} from './command-name.enum.js';
 
 export default class ImportCommand implements CliCommandInterface {
-  public readonly name: string = '--import';
+  public readonly name: CommandName = CommandName.Import;
 
   private onLine(line: string) {
     const offer = createFilm(line);

@@ -1,14 +1,15 @@
-import {CliCommandInterface} from '../core/cli-command/cli-command.interface';
+import {CliCommandInterface} from '../core/cli-command/cli-command.interface.js';
+import {CommandName} from '../core/cli-command/command-name.enum.js';
 
 type ParsedCommand = {
-  [key: string]: string[]
+  [key: string]: CommandName[]
 }
 
 export default class CLIApplication {
   private commands: {[propertyName: string]: CliCommandInterface} = {};
-  private defaultCommand = '--help';
+  private defaultCommand = CommandName.Help;
 
-  private parseCommand(cliArguments: string[]): ParsedCommand {
+  private parseCommand(cliArguments: CommandName[]): ParsedCommand {
     const parsedCommand: ParsedCommand = {};
     let command = '';
     return cliArguments.reduce((acc, item) => {
@@ -26,7 +27,7 @@ export default class CLIApplication {
     return this.commands[commandName] ?? this.commands[this.defaultCommand];
   }
 
-  public processCommand(argv: string[]): void {
+  public processCommand(argv: CommandName[]): void {
     const parsedCommand = this.parseCommand(argv);
     const [commandName] = Object.keys(parsedCommand);
     const command = this.getCommand(commandName);

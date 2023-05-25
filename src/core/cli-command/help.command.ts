@@ -1,5 +1,6 @@
-import { CliCommandInterface } from './cli-command.interface';
+import {CliCommandInterface} from './cli-command.interface';
 import chalk from 'chalk';
+import {CommandName} from './command-name.enum.js';
 
 
 const path = `${chalk.yellow(`<${chalk.red('path')}>`)}`;
@@ -9,7 +10,7 @@ const argumentsColor = `${chalk.yellow(`<${chalk.red('--arguments')}>`)}`;
 
 
 export default class HelpCommand implements CliCommandInterface {
-  public readonly name: string = '--help';
+  public readonly name: CommandName = CommandName.Help;
 
   public async execute(): Promise<void> {
     console.log(`
