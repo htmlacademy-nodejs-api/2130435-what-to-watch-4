@@ -1,5 +1,5 @@
 import {CliCommandInterface} from './cli-command.interface';
-import {createFilm, getErrorMessage} from '../helpers/index.js';
+import {createFilm, getErrorMessage, getMongoURI} from '../helpers/index.js';
 import TSVFileReader from '../file-reader/tsv-file-reader.js';
 import {CommandName} from './command-name.enum.js';
 import { LoggerInterface } from '../logger/logger.interface.js';
@@ -12,6 +12,7 @@ import { FilmModel } from '../../modules/film/film.entity.js';
 import { UserModel} from '../../modules/user/user.entity.js';
 import UserService from '../../modules/user/user.service.js';
 import MongoClientService from '../database-client/mongo-client.service.js';
+import {Film} from '../../types/film.type.js';
 
 const DEFAULT_DB_PORT = '27017';
 const DEFAULT_USER_PASSWORD = '123456';
@@ -34,16 +35,41 @@ export default class ImportCommand implements CliCommandInterface {
     this.databaseService = new MongoClientService(this.logger);
   }
 
-  private onLine(line: string) {
-    const offer = createFilm(line);
-    console.log(offer);
+  private async saveFilm(film: Film) {
+    const user = await this.userService.findOrCreate({
+      ...film.user,
+      password: DEFAULT_USER_PASSWORD,
+    }, this.salt);
+
+    await this.filmService.create({
+      ...film,
+      user: user.id,
+    });
+  }
+
+  private async onLine(line: string, resolve: () => void) {
+    const film = createFilm(line);
+    await this.saveFilm(film);
+    resolve();
   }
 
   private onComplete(count: number) {
     console.log(`${count} rows imported.`);
+    this.databaseService.disconnect();
   }
 
-  public async execute(filename: string): Promise<void> {
+  public async execute(
+    filename: string,
+    login: string,
+    password: string,
+    host: string,
+    dbname: string,
+    salt: string): Promise<void> {
+    const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
+    this.salt = salt;
+
+    await this.databaseService.connect(uri);
+
     const fileReader = new TSVFileReader(filename.trim());
 
     fileReader.on('line', this.onLine);

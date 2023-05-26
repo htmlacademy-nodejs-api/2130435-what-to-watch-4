@@ -1,3 +1,5 @@
+import {User} from './user.type.js';
+
 export enum Genre {
   Comedy = 'comedy',
   Crime = 'crime',
@@ -23,7 +25,7 @@ export interface Film {
   director: string;
   duration: number;
   commentsCount: number;
-  userId: string;
+  user: User;
   poster: string;
   backgroundImage: string;
   backgroundColor: string;

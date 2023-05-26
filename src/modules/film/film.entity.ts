@@ -1,4 +1,4 @@
-import { Genre} from '../../types/film.type.js';
+import { Genre} from '../../types/film.type';
 import typegoose, {defaultClasses, getModelForClass, modelOptions, Ref} from '@typegoose/typegoose';
 import {UserEntity} from '../user/user.entity.js';
 
