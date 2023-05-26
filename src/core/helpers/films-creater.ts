@@ -39,7 +39,7 @@ export function createFilm(filmData: string): Film {
     actors: actors.split(','),
     director,
     duration: +duration,
-    user,
+    userId: user,
     poster,
     backgroundImage,
     backgroundColor,
