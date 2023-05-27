@@ -20,10 +20,10 @@ export default class FilmGenerator implements FilmGeneratorInterface{
         generateRandomValue(MathDayWeek.Min, MathDayWeek.Max), 'day'
       ).toISOString();
 
-    const genre = getRandomItems<Genre>([
+    const genre = getRandomItems([
       Genre.Comedy, Genre.Crime, Genre.Documentary, Genre.Drama,
       Genre.Horror, Genre.Family, Genre.Romance, Genre.SciFi, Genre.Thriller]
-    ).join(', ');
+    );
 
     const realiseDate = getRandomItem<string>(this.MockData.realiseDates);
     const rating = getRandomItem<number>(this.MockData.rating);
