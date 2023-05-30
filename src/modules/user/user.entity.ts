@@ -12,14 +12,14 @@ export interface UserEntity extends defaultClasses.Base {}
   }
 })
 export class UserEntity extends defaultClasses.TimeStamps implements User {
+  @prop({ required: true, minlength: 1, maxlength: 15 })
+  public name!: string;
+
   @prop({ required: true, unique: true, match: /^([\w-\\.]+@([\w-]+\.)+[\w-]{2,4})?$/ })
   public email!: string ;
 
   @prop({ required: false, match: /\.(jpe?g|png)$/i, default: '' })
   public avatar?: string;
-
-  @prop({ required: true, minlength: 1, maxlength: 15, default: '' })
-  public name!: string;
 
   @prop({ required: true })
   public password!: string;

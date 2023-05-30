@@ -39,6 +39,28 @@ export default class FilmGenerator implements FilmGeneratorInterface{
     const poster = getRandomItem<string>(this.MockData.posters);
     const backgroundImage = getRandomItem<string>(this.MockData.backgroundImages);
     const backgroundColor = getRandomItem<string>(this.MockData.backgroundColors);
+
+
+    console.log('title', title);
+    console.log('description', description);
+    console.log('publicationDate', publicationDate);
+    console.log('genre', genre);
+    console.log('realiseDate', realiseDate);
+    console.log('rating', rating);
+    console.log('previewVideo', previewVideo);
+    console.log('videoLink', videoLink);
+    console.log('actors', actors);
+    console.log('director', director);
+    console.log('duration', duration);
+    console.log('userName', userName);
+    console.log('userAvatar', userAvatar);
+    console.log('userEmail', userEmail);
+    console.log('userPassword', userPassword);
+    console.log('poster', poster);
+    console.log('backgroundImage', backgroundImage);
+    console.log('backgroundColor', backgroundColor);
+
+
     return [
       title, description, publicationDate,
       genre, realiseDate, rating, previewVideo,

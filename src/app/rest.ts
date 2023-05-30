@@ -18,7 +18,7 @@ export default class RestApplication {
     this.logger.info('Application initialization...');
     this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
 
-    this.logger.info('Init database…');
+    this.logger.info('Init database...');
     await this._initDb();
     this.logger.info('Init database completed');
   }

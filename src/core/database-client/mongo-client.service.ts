@@ -5,10 +5,10 @@ import { setTimeout } from 'node:timers/promises';
 import {LoggerInterface} from '../logger/logger.interface.js';
 import { AppComponent } from '../../types/app-components.enum.js';
 
-const enum Retry {
-  Count = 5,
-  Timeout = 1000,
-}
+const Retry = {
+  Count: 5,
+  Timeout: 1000,
+} as const;
 
 @injectable()
 export default class MongoClientService implements DatabaseClientInterface {
@@ -51,7 +51,7 @@ export default class MongoClientService implements DatabaseClientInterface {
       throw new Error('MongoDB client already connected');
     }
 
-    this.logger.info('Trying to connect to MongoDB…');
+    this.logger.info('Trying to connect to MongoDB...');
     await this._connect(uri);
     this.logger.info('Database connection established.');
   }

@@ -48,6 +48,7 @@ export default class ImportCommand implements CliCommandInterface {
   }
 
   private async onLine(line: string, resolve: () => void) {
+    console.log(line);
     const film = createFilm(line);
     await this.saveFilm(film);
     resolve();

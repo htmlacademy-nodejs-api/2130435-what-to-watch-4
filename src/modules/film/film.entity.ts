@@ -18,7 +18,7 @@ export class FilmEntity extends defaultClasses.TimeStamps {
   @prop({required: true, minlength: 20, maxlength: 1024})
   public description!: string;
 
-  @prop({required: true, default: new Date()})
+  @prop({required: false, default: new Date()})
   public publicationDate!: Date;
 
   @prop({required: true, enum: Genre, type: String})
@@ -27,22 +27,22 @@ export class FilmEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public realiseDate!: string;
 
-  @prop({required: true, default: 0})
+  @prop({required: false, default: 0})
   public rating!: number;
 
-  @prop({required: true, default: ''})
+  @prop({required: true, match: /https?:\/\//g})
   public previewVideo!: string;
 
-  @prop({required: true, default: ''})
+  @prop({required: true, match: /https?:\/\//g})
   public videoLink!: string;
 
-  @prop({required: true, default: []})
+  @prop({required: true})
   public actors!: string[];
 
   @prop({required: true, minlength: 2, maxlength: 50})
   public director!: string;
 
-  @prop({required: true, default: 0})
+  @prop({required: true})
   public duration!: number;
 
   @prop({required: false, default: 0})
