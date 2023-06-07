@@ -9,12 +9,12 @@
       "Название фильма 6"
     ],
     "descriptions": [
-      "Описание фильма 1",
-      "Описание фильма 2",
-      "Описание фильма 3",
-      "Описание фильма 4",
-      "Описание фильма 5",
-      "Описание фильма 6"
+      "Описание произведения киноискусства фильм - 1",
+      "Описание произведения киноискусства фильм - 2",
+      "Описание произведения киноискусства фильм - 3",
+      "Описание произведения киноискусства фильм - 4",
+      "Описание произведения киноискусства фильм - 5",
+      "Описание произведения киноискусства фильм - 6"
     ],
     "realiseDates": [
       "2000",
@@ -59,28 +59,28 @@
     ],
     "durations": [ 30, 40, 50, 60, 70, 80 ],
     "userNames": [
-      "Имя пользователя 1",
-      "Имя пользователя 2",
-      "Имя пользователя 3",
-      "Имя пользователя 4",
-      "Имя пользователя 5",
-      "Имя пользователя 6"
+      "Имя-1",
+      "Имя-2",
+      "Имя-3",
+      "Имя-4",
+      "Имя-5",
+      "Имя-6"
     ],
     "userAvatars": [
-      "https://loremflickr.com/320/240/man",
-      "https://loremflickr.com/320/240/woman",
-      "https://loremflickr.com/320/240/man",
-      "https://loremflickr.com/320/240/woman",
-      "https://loremflickr.com/320/240/man",
-      "https://loremflickr.com/320/240/woman"
+      "user-avatar-1.jpg",
+      "user-avatar-2.jpg",
+      "user-avatar-3.jpg",
+      "user-avatar-4.png",
+      "user-avatar-5.jpg",
+      "user-avatar-6.png"
     ],
     "userEmails": [
-      "user1@ya.ru",
-      "user2@ya.ru",
-      "user3@ya.ru",
-      "user4@ya.ru",
-      "user5@ya.ru",
-      "user6@ya.ru"
+      "user1@gmail.com",
+      "user2@gmail.com",
+      "user3@gmail.com",
+      "user4@gmail.com",
+      "user5@gmail.com",
+      "user6@gmail.com"
     ],
     "userPasswords": [
       "password1",
@@ -91,20 +91,20 @@
       "password6"
     ],
     "posters": [
-      "https://loremflickr.com/320/240/dog",
-      "https://loremflickr.com/320/240/cat",
-      "https://loremflickr.com/320/240/bird",
-      "https://loremflickr.com/320/240/hamster",
-      "https://loremflickr.com/320/240/rabbit",
-      "https://loremflickr.com/320/240/horse"
+      "poster-1.jpg",
+      "poster-2.jpg",
+      "poster-3.jpg",
+      "poster-4.jpg",
+      "poster-5.jpg",
+      "poster-6.jpg"
     ],
     "backgroundImages": [
-      "https://loremflickr.com/g/1920/1080/paris",
-      "https://loremflickr.com/g/1920/1080/paris",
-      "https://loremflickr.com/g/1920/1080/paris",
-      "https://loremflickr.com/g/1920/1080/paris",
-      "https://loremflickr.com/g/1920/1080/paris",
-      "https://loremflickr.com/g/1920/1080/paris"
+      "background-image1.jpg",
+      "background-image2.jpg",
+      "background-image3.jpg",
+      "background-image4.jpg",
+      "background-image5.jpg",
+      "background-image6.jpg"
     ],
     "backgroundColors": [
       "#000",

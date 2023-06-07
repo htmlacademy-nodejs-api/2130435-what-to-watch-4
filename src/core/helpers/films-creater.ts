@@ -14,6 +14,7 @@ export function createFilm(filmData: string): Film {
     director,
     duration,
     name,
+    avatar,
     email,
     password,
     poster,
@@ -22,8 +23,9 @@ export function createFilm(filmData: string): Film {
   ] = filmData.replace('\n', '').split('\t');
 
   const user = {
-    email,
     name,
+    avatar,
+    email,
     password
   };
 
@@ -39,7 +41,7 @@ export function createFilm(filmData: string): Film {
     actors: actors.split(','),
     director,
     duration: +duration,
-    user,
+    user: user,
     poster,
     backgroundImage,
     backgroundColor,

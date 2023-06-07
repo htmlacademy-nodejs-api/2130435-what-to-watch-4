@@ -1,4 +1,4 @@
-import {User} from './user.type';
+import {User} from './user.type.js';
 
 export enum Genre {
   Comedy = 'comedy',
@@ -12,7 +12,7 @@ export enum Genre {
   Thriller = 'thriller',
 }
 
-export type Film = {
+export interface Film {
   title: string;
   description: string;
   publicationDate: Date;
@@ -24,7 +24,7 @@ export type Film = {
   actors: string[];
   director: string;
   duration: number;
-  commentsCount?: number;
+  commentsCount: number;
   user: User;
   poster: string;
   backgroundImage: string;
