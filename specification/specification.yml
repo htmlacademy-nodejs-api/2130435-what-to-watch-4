@@ -247,17 +247,16 @@ paths:
           required: true
           schema:
             type: string
-            items:
-              enum:
-                - comedy
-                - crime
-                - documentary
-                - drama
-                - horror
-                - family
-                - romance
-                - scifi
-                - thriller
+            enum:
+              - comedy
+              - crime
+              - documentary
+              - drama
+              - horror
+              - family
+              - romance
+              - scifi
+              - thriller
         - name: limit
           in: query
           description: Количество фильмов, которые нужно вернуть
@@ -567,6 +566,12 @@ paths:
                 $ref: '#/components/schemas/error'
         '403':
           description: Доступ запрещен. Только анонимные клиенты могут создавать пользователей.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '409':
+          description: Пользователь уже существует
           content:
             application/json:
               schema:
