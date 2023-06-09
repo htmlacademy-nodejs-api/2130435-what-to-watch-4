@@ -104,7 +104,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
   /films/{filmId}:
     get:
       tags:
@@ -235,7 +234,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
   /films/{genre}:
     get:
       tags:
@@ -304,7 +302,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
   /films/promo:
     get:
       tags:
@@ -324,7 +321,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
   /films/watch-list:
     get:
       tags:
@@ -354,7 +350,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
-
   /films/watch-list/{filmId}:
     post:
       tags:
@@ -431,6 +426,119 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  /films/{filmId}/comments:
+    get:
+      tags:
+        - comments
+      summary: Метод получения комментариев фильма
+      description: Ресурс для получения комментариев фильма
+      parameters:
+        - name: filmId
+          in: path
+          description: Идентификатор фильма
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Количество комментариев
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 50
+            minimum: 1
+        - name: offset
+          in: query
+          description:  Количество комментариев, которые нужно пропустить (смещение). Рекомендуется указывать значение, кратное параметру `limit`.
+          required: false
+          schema:
+            type: integer
+            default: 0
+            maximum: 50
+            minimum: 0
+        - name: sort
+          in: query
+          description: Сортировка комментариев по дате убликации. По умолчанию – (по убыванию).
+          required: false
+          schema:
+            type: string
+            default: desc
+            enum:
+              - asc
+              - desc
+      responses:
+        '200':
+          description: Комментарии успешно получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+        '404':
+          description: Фильм не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      tags:
+        - comments
+      summary: Метод добавления комментария к фильму
+      description: Ресурс для добавления комментария к фильму
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: filmId
+          in: path
+          description: Индетификатор фильма
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/comment'
+      responses:
+        '201':
+          description: Комментарий успешно добавлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        '400':
+          description: Ошибка валидации входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Неавторизованный доступ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: Фильм не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 
 components:
   schemas:
@@ -574,3 +682,30 @@ components:
       properties:
         message:
           type: string
+
+    comment:
+      type: object
+      required:
+        - text
+        - rating
+        - user
+      properties:
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        date:
+          type: string
+          format: date
+          pattern: ^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$
+          minLength: 10
+          maxLength: 10
+          x-42c-format: o:date
+          example: 2020-08-31
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+        user:
+          type: object
+          $ref: '#/components/schemas/user'
