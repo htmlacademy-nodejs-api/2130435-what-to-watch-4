@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
     title: API сервер для приложения «what-the-watch»
     description: |-
@@ -540,7 +540,140 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
 
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Метод создания пользователя
+      description: Ресурс для создания пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fullUser'
+      responses:
+        '201':
+          description: Пользователь успешно создан.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Ошибка валидации входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '403':
+          description: Доступ запрещен. Только анонимные клиенты могут создавать пользователей.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Метод авторизации
+      description: Ресурс для авторизации пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        '200':
+          description: Успешная аутентификация. Возвращен токен доступа.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Некорректный запрос. Отсутствуют или неверные параметры.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Неверный логин или пароль. Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    delete:
+      tags:
+        - users
+      summary: Метод для завершения сеанса
+      description: Ресурс ддля завершения сеанса пользователя
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Пользователь успешно вышел из сеанса.
+        '401':
+          description: Доступ запрещен. Клиент не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /users/status:
+    get:
+      tags:
+        - users
+      summary: Метод получения статуса пользователя
+      description: Ресурс для получения статуса пользователя
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Клиент авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Доступ запрещен. Клиент не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     film:
       type: object
@@ -669,6 +802,9 @@ components:
 
     user:
       type: object
+      required:
+        - id
+        - email
       properties:
         id:
           type: string
@@ -676,6 +812,11 @@ components:
         email:
           type: string
           example: example@gmail.com
+        avatar:
+          type: string
+          description: Аватар пользователя
+          pattern: \.jpg$
+          example: avatar.jpg
 
     error:
       type: object
