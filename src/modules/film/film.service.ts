@@ -1,6 +1,6 @@
-import { inject, injectable } from 'inversify';
-import { DocumentType, ModelType } from '@typegoose/typegoose/lib/types.js';
-import { LoggerInterface } from '../../core/logger/logger.interface.js';
+import {inject, injectable} from 'inversify';
+import {DocumentType, ModelType} from '@typegoose/typegoose/lib/types.js';
+import {LoggerInterface} from '../../core/logger/logger.interface.js';
 import {AppComponent} from '../../types/app-components.enum.js';
 import {FilmServiceInterface} from './film-service.interface.js';
 import CreateFilmDto from './dto/create-film.dto.js';
@@ -60,9 +60,13 @@ export default class FilmService implements FilmServiceInterface {
   }
 
   //promo
-  public async findPromoFilm(): Promise<DocumentType<FilmEntity>> {
+  public async findPromoFilm(): Promise<DocumentType<FilmEntity> | null> {
+    const count = await this.filmModel.countDocuments();
+    const randomIndex = Math.floor(Math.random() * count);
+
     return this.filmModel
-      .findOne({isPromo: true})
+      .findOne()
+      .skip(randomIndex)
       .exec();
   }
 
@@ -103,9 +107,34 @@ export default class FilmService implements FilmServiceInterface {
       }}).exec();
   }
 
-  public async calcRating(filmId: string, rating: number): Promise<DocumentType<FilmEntity> | null> {
-    return this.filmModel
-      .findByIdAndUpdate(filmId, {'$inc': {rating}}).exec();
+  public async calcRating(filmId: string): Promise<DocumentType<FilmEntity> | null> {
+    const aggregation = [
+      { $match: { _id: filmId } }, // Находим фильм по идентификатору
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'filmId',
+          as: 'comments',
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          rating: { $avg: '$comments.rating' }, // Рассчитываем средний рейтинг комментариев
+        },
+      },
+    ];
+
+    const result = await this.filmModel.aggregate(aggregation).exec();
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    const rating = result[0].rating;
+
+    return await this.filmModel.findByIdAndUpdate(filmId, {rating}, {new: true}).exec();
   }
 
   public async exists(documentId: string): Promise<boolean> {

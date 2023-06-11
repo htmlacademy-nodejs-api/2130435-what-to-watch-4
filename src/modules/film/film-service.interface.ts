@@ -18,7 +18,7 @@ export interface FilmServiceInterface {
   findByGenre(genre: Genre): Promise<DocumentType<FilmEntity>[]>;
 
   //promo
-  findPromoFilm(): Promise<DocumentType<FilmEntity>[]>;
+  findPromoFilm(): Promise<DocumentType<FilmEntity> | null>;
 
   //watch-list
   findWatchListFilms(): Promise<DocumentType<FilmEntity>[]>;

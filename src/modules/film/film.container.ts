@@ -8,7 +8,7 @@ import FilmService from './film.service.js';
 export function createFilmContainer() {
   const filmContainer = new Container();
 
-  filmContainer.bind<FilmServiceInterface>(AppComponent.FilmServiceInterface).to(FilmService);
+  filmContainer.bind<FilmServiceInterface>(AppComponent.FilmServiceInterface).to(FilmService).inSingletonScope();
   filmContainer.bind<types.ModelType<FilmEntity>>(AppComponent.FilmModel).toConstantValue(FilmModel);
 
   return filmContainer;
