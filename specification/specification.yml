@@ -1,0 +1,857 @@
+openapi: 3.0.3
+info:
+    title: API сервер для приложения «what-the-watch»
+    description: |-
+      * Список ресурсов и маршрутов сервера «what-the-watch»
+    license:
+      name: MIT
+      url: https://opensource.org/licenses/MIT
+    version: 1.0.0
+
+tags:
+  - name: films
+    description: Действия с фильмами
+  - name: users
+    description: Действия с пользователями
+  - name: comments
+    description: Действия с комментариями
+
+paths:
+  /films:
+    get:
+      tags:
+        - films
+      summary: Метод получения списка фильмов
+      description: Ресурс для получения списка фильмов
+      parameters:
+        - name: limit
+          in: query
+          description: Количество фильмов для получения (по умолчанию 60)
+          required: false
+          schema:
+            type: integer
+            default: 60
+        - name: offset
+          in: query
+          description:  Количество фильмов, которые нужно пропустить (смещение). Рекомендуется указывать значение, кратное параметру `limit`.
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Список фильмов успешно получен
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/film'
+        '400':
+          description: Некорректное значение параметров запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Ошибка сервера при получении списка фильмов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      tags:
+        - films
+      summary: Метод создания фильма
+      description: Ресурс для создания фильма
+      operationId: createFilm
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/film'
+      responses:
+        '201':
+          description: Фильм успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+        '400':
+          description: Некорректные данные фильма
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Неавторизованный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /films/{filmId}:
+    get:
+      tags:
+        - films
+      summary: Метод получения фильма
+      description: Ресурс для получения фильма
+      parameters:
+        - name: filmId
+          in: path
+          description: Идентификатор фильма
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Фильм успешно получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+        '404':
+          description: Фильм не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    put:
+      tags:
+        - films
+      summary: Метод редактирования карточки фильма
+      description: Ресурс для редактирования фильма.
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: filmId
+          in: path
+          description: Идентификатор редактируемого фильма
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/film'
+      responses:
+        '200':
+          description: Карточка фильма успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+                '400':
+                  description: Некорректные данные фильма
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/error'
+                '401':
+                  description: Неавторизованный запрос
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/error'
+                '403':
+                  description: Доступ запрещен
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/error'
+                '404':
+                  description: Фильм не найден
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/error'
+                '500':
+                  description: Внутренняя ошибка сервера
+                  content:
+                    application/json:
+                      schema:
+                        $ref: '#/components/schemas/error'
+    delete:
+      tags:
+        - films
+      summary: Метод удаления фильма
+      description: Ресурс для удаления фильма.
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: filmId
+          in: path
+          description: Идентификатор удаляемого фильма
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Фильм успешно удален
+        '401':
+          description: Неавторизованный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: Фильм не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /films/{genre}:
+    get:
+      tags:
+        - films
+      summary: Метод получения фильмов по жанру
+      description: Ресурс для получения фильмов по жанру.
+      parameters:
+        - name: genre
+          in: path
+          description: Идентификатор жанра
+          required: true
+          schema:
+            type: string
+            enum:
+              - comedy
+              - crime
+              - documentary
+              - drama
+              - horror
+              - family
+              - romance
+              - scifi
+              - thriller
+        - name: limit
+          in: query
+          description: Количество фильмов, которые нужно вернуть
+          required: false
+          schema:
+            type: integer
+            default: 60
+        - name: offset
+          in: query
+          description: Количество фильмов, которые нужно пропустить (смещение). Рекомендуется указывать значение, кратное параметру `limit`.
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Успешный ответ со списком фильмов
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  films:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/film'
+        '400':
+          description: Неверный запрос или параметры
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Несанкционированный доступ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /films/promo:
+    get:
+      tags:
+        - films
+      summary: Метод получения промо фильма
+      description: Ресурс для получения промо фильма
+      responses:
+        '200':
+          description: Фильм успешно получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /films/watch-list:
+    get:
+      tags:
+        - films
+      summary: Метод получения списка фильмов «К просмотру» пользователя
+      description: Ресурс для получения списка фильмов «К просмотру» пользователя
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Фильмы успешно получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/film'
+        '401':
+          description: Неавторизованный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /films/watch-list/{filmId}:
+    post:
+      tags:
+        - films
+      summary: Метод добавления фильма в список фильмов «К просмотру» пользователя
+      description: Ресурс для добавления фильма в список фильмов «К просмотру» пользователя
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: filmId
+          in: path
+          description: Идентификатор фильма
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Фильм успешно добавлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/film'
+        '401':
+          description: Неавторизованный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: Фильм не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    delete:
+      tags:
+        - films
+      summary: Метод удаления фильма из списока фильмов «К просмотру» пользователя
+      description: Ресурс для удаления фильма из списока фильмов «К просмотру» пользователя
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: filmId
+          in: path
+          description: Идентификатор фильма
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Фильм успешно добавлен
+        '401':
+          description: Неавторизованный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: Фильм не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  /films/{filmId}/comments:
+    get:
+      tags:
+        - comments
+      summary: Метод получения комментариев фильма
+      description: Ресурс для получения комментариев фильма
+      parameters:
+        - name: filmId
+          in: path
+          description: Идентификатор фильма
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Количество комментариев
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 50
+            minimum: 1
+        - name: offset
+          in: query
+          description:  Количество комментариев, которые нужно пропустить (смещение). Рекомендуется указывать значение, кратное параметру `limit`.
+          required: false
+          schema:
+            type: integer
+            default: 0
+            maximum: 50
+            minimum: 0
+        - name: sort
+          in: query
+          description: Сортировка комментариев по дате убликации. По умолчанию – (по убыванию).
+          required: false
+          schema:
+            type: string
+            default: desc
+            enum:
+              - asc
+              - desc
+      responses:
+        '200':
+          description: Комментарии успешно получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+        '404':
+          description: Фильм не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      tags:
+        - comments
+      summary: Метод добавления комментария к фильму
+      description: Ресурс для добавления комментария к фильму
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: filmId
+          in: path
+          description: Индетификатор фильма
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/comment'
+      responses:
+        '201':
+          description: Комментарий успешно добавлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        '400':
+          description: Ошибка валидации входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Неавторизованный доступ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '404':
+          description: Фильм не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Метод создания пользователя
+      description: Ресурс для создания пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fullUser'
+      responses:
+        '201':
+          description: Пользователь успешно создан.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Ошибка валидации входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '403':
+          description: Доступ запрещен. Только анонимные клиенты могут создавать пользователей.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '409':
+          description: Пользователь уже существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Метод авторизации
+      description: Ресурс для авторизации пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        '200':
+          description: Успешная аутентификация. Возвращен токен доступа.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Некорректный запрос. Отсутствуют или неверные параметры.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '401':
+          description: Неверный логин или пароль. Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    delete:
+      tags:
+        - users
+      summary: Метод для завершения сеанса
+      description: Ресурс ддля завершения сеанса пользователя
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: Пользователь успешно вышел из сеанса.
+        '401':
+          description: Доступ запрещен. Клиент не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /users/status:
+    get:
+      tags:
+        - users
+      summary: Метод получения статуса пользователя
+      description: Ресурс для получения статуса пользователя
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Клиент авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Доступ запрещен. Клиент не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    film:
+      type: object
+      required:
+        - title
+        - description
+        - publicationDate
+        - genre
+        - year
+        - rating
+        - previewVideo
+        - videoLink
+        - actors
+        - director
+        - duration
+        - user
+        - poster
+        - backgroundImage
+        - backgroundColor
+      properties:
+        title:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: Джон Уик 4
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+          example: Оставляя за собой горы трупов, Джон Уик продолжает скрываться от всевозможных наёмных убийц.
+        publicationDate:
+          type: string
+          format: date
+          pattern: ^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$
+          minLength: 10
+          maxLength: 10
+          x-42c-format: o:date
+          example: 2020-08-31
+        genre:
+            type: array
+            items:
+              enum:
+                - comedy
+                - crime
+                - documentary
+                - drama
+                - horror
+                - family
+                - romance
+                - scifi
+                - thriller
+            example: [comedy, crime, documentary]
+        year:
+          type: integer
+          minimum: 1900
+          example: 2020
+        rating:
+          type: number
+          minimum: 0
+          default: 0
+        previewVideo:
+          type: string
+          format: url
+          example: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+        videoLink:
+          type: string
+          format: url
+          example: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+        actors:
+          type: array
+          items:
+            type: string
+          example: ['Киану Ривз', 'Бред Питт', 'Джек Лондон']
+        director:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: Фрэнк Дарабонт
+        duration:
+          type: integer
+          minimum: 1
+          example: 120
+        commentsCount:
+          type: integer
+          default: 0
+        user:
+          type: object
+          $ref: '#/components/schemas/user'
+        poster:
+          type: string
+          pattern: \.jpg$
+          example: poster.jpg
+        backgroundImage:
+          type: string
+          pattern: \.jpg$
+          example: background.jpg
+        backgroundColor:
+          type: string
+          pattern: \#[0-9a-f]{6}
+
+    fullUser:
+      type: object
+      required:
+        - email
+        - name
+        - password
+      properties:
+        email:
+          type: string
+          example: example@gmail.com
+          description: Почта пользователя
+        name:
+          type: string
+          example: Иван
+          description: Имя пользователя
+        password:
+          type: string
+          example: password123
+          description: Пароль пользователя
+        avatar:
+          type: string
+          format: binary
+          description: Аватар пользователя
+          pattern: \.jpg$
+          example: avatar.jpg
+
+    user:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+        email:
+          type: string
+          example: example@gmail.com
+        avatar:
+          type: string
+          description: Аватар пользователя
+          pattern: \.jpg$
+          example: avatar.jpg
+
+    error:
+      type: object
+      properties:
+        message:
+          type: string
+
+    comment:
+      type: object
+      required:
+        - text
+        - rating
+        - user
+      properties:
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        date:
+          type: string
+          format: date
+          pattern: ^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$
+          minLength: 10
+          maxLength: 10
+          x-42c-format: o:date
+          example: 2020-08-31
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 10
+        user:
+          type: object
+          $ref: '#/components/schemas/user'
