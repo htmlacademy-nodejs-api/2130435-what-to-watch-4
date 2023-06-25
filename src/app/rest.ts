@@ -50,11 +50,9 @@ export default class RestApplication {
     this.logger.info('Try to init server...');
 
     const port = this.config.get('PORT');
-    this.expressApplication.listen(port);
-
-    this.logger.info(
-      `Server started on http://localhost:${this.config.get('PORT')}`
-    );
+    this.expressApplication.listen(port, () => {
+      this.logger.info(`Server started on http://localhost:${port}`);
+    });
   }
 
   private async _initExceptionFilters() {
