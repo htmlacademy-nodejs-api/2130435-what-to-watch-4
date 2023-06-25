@@ -5,9 +5,9 @@ import {AppComponent} from '../../types/app-components.enum.js';
 import {FilmServiceInterface} from './film-service.interface.js';
 import CreateFilmDto from './dto/create-film.dto.js';
 import {FilmEntity} from './film.entity.js';
-import UpdateFilmDto from './dto/update-film.dto';
-import {Genre} from '../../types/film.type';
-import {DEFAULT_FILM_COUNT} from './film.constant';
+import UpdateFilmDto from './dto/update-film.dto.js';
+import {Genre} from '../../types/film.type.js';
+import {DEFAULT_FILM_COUNT} from './film.constant.js';
 
 @injectable()
 export default class FilmService implements FilmServiceInterface {
@@ -35,6 +35,13 @@ export default class FilmService implements FilmServiceInterface {
   public async findByFilmId(filmId: string): Promise<DocumentType<FilmEntity> | null> {
     return this.filmModel
       .findById(filmId)
+      .populate('user')
+      .exec();
+  }
+
+  public async findByFilmTitle(filmTitle: string): Promise<DocumentType<FilmEntity> | null> {
+    return this.filmModel
+      .findOne({title: filmTitle})
       .populate('user')
       .exec();
   }

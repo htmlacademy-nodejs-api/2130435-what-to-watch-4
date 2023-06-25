@@ -10,7 +10,8 @@ export interface FilmServiceInterface {
   find(count?: number): Promise<DocumentType<FilmEntity>[]>;
 
   //film
-  findByFilmId(categoryId: string): Promise<DocumentType<FilmEntity> | null>;
+  findByFilmId(filmId: string): Promise<DocumentType<FilmEntity> | null>;
+  findByFilmTitle(filmTitle: string): Promise<DocumentType<FilmEntity> | null>;
   updateFilmById(filmId: string, dto: UpdateFilmDto): Promise<DocumentType<FilmEntity> | null>;
   deleteFilmById(filmId: string): Promise<DocumentType<FilmEntity> | null>;
 
