@@ -7,7 +7,7 @@ import UpdateFilmDto from './dto/update-film.dto.js';
 export interface FilmServiceInterface {
   //films
   create(dto: CreateFilmDto): Promise<DocumentType<FilmEntity>>;
-  find(count?: number): Promise<DocumentType<FilmEntity>[]>;
+  find(limitQuery?: number, skipQuery?: number): Promise<DocumentType<FilmEntity>[]>;
 
   //film
   findByFilmId(filmId: string): Promise<DocumentType<FilmEntity> | null>;

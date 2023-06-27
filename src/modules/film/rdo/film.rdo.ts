@@ -1,5 +1,6 @@
-import {Expose} from 'class-transformer';
-import {Genre} from '../../../types/film.type';
+import {Expose, Type} from 'class-transformer';
+import {Genre} from '../../../types/film.type.js';
+import UserRdo from '../../user/rdo/user.rdo.js';
 
 export default class FilmRdo {
   @Expose()
@@ -35,8 +36,9 @@ export default class FilmRdo {
   @Expose()
   public duration!: number;
 
-  @Expose()
-  public user!: string;
+  @Expose({name: 'user'})
+  @Type(() => UserRdo)
+  public user!: UserRdo;
 
   @Expose()
   public poster!: string;

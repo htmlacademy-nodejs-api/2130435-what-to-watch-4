@@ -14,12 +14,12 @@ export default class RestApplication {
   private expressApplication: Express;
 
   constructor(
-    @inject(AppComponent.LoggerInterface) private readonly logger: LoggerInterface,
-    @inject(AppComponent.ConfigInterface) private readonly config: ConfigInterface<RestSchema>,
-    @inject(AppComponent.DatabaseClientInterface) private readonly databaseClient: DatabaseClientInterface,
-    @inject(AppComponent.FilmController) private readonly filmController: ControllerInterface,
-    @inject(AppComponent.ExceptionFilterInterface) private readonly exceptionFilter: ExceptionFilterInterface,
-    @inject(AppComponent.UserController) private readonly userController: ControllerInterface
+    @inject(AppComponent.LoggerInterface) private logger: LoggerInterface,
+    @inject(AppComponent.ConfigInterface) private config: ConfigInterface<RestSchema>,
+    @inject(AppComponent.DatabaseClientInterface) private databaseClient: DatabaseClientInterface,
+    @inject(AppComponent.FilmController) private filmController: ControllerInterface,
+    @inject(AppComponent.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface,
+    @inject(AppComponent.UserController) private userController: ControllerInterface,
   ) {
     this.expressApplication = express();
   }
