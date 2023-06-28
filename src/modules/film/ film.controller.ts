@@ -23,13 +23,15 @@ import {ValidateGenreMiddleware} from '../../core/middleware/validate-genre.midd
 import {PrivateRouteMiddleware} from '../../core/middleware/private-route.middleware.js';
 import {CheckUserMiddleware} from '../../core/middleware/check-user.middleware.js';
 import FilmListRdo from './rdo/film-list.rdo.js';
+import WatchlistService from './watchlist.service.js';
 
 @injectable()
 export default class FilmController extends Controller {
   constructor(
     @inject(AppComponent.LoggerInterface) protected readonly logger: LoggerInterface,
     @inject(AppComponent.FilmServiceInterface) protected readonly filmsService: FilmServiceInterface,
-    @inject(AppComponent.CommentServiceInterface) protected readonly commentsService: CommentServiceInterface
+    @inject(AppComponent.CommentServiceInterface) protected readonly commentsService: CommentServiceInterface,
+    @inject(AppComponent.WatchlistServiceInterface) protected readonly watchlistService: WatchlistService
   ) {
     super(logger);
 
@@ -110,8 +112,24 @@ export default class FilmController extends Controller {
         new PrivateRouteMiddleware(),
       ]
     });
-    // this.addRoute({path: '/watch-list/:filmId', method: HttpMethod.Post, handler: this.create });
-    // this.addRoute({path: '/watch-list/:filmId', method: HttpMethod.Delete, handler: this.create });
+    this.addRoute({
+      path: '/watch-list/:filmId',
+      method: HttpMethod.Post,
+      handler: this.addFilmToWatchList,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('filmId'),
+      ]
+    });
+    this.addRoute({
+      path: '/watch-list/:filmId',
+      method: HttpMethod.Delete,
+      handler: this.deleteFilmFromWatchList,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('filmId'),
+      ]
+    });
 
     //comment
     this.addRoute({
@@ -169,11 +187,29 @@ export default class FilmController extends Controller {
     this.ok(res, filmsToResponse);
   }
 
-  public async indexWatchList(_req: Request, res: Response) {
+  public async indexWatchList({user}: Request, res: Response) {
     const films = await this
-      .filmsService.findWatchListFilms();
+      .watchlistService.findByUserId(user.id);
     const filmsToResponse = fillDto(FilmListRdo, films);
     this.ok(res, filmsToResponse);
+  }
+
+  public async addFilmToWatchList(
+    { params, user }: Request,
+    res: Response
+  ){
+    const result = await this
+      .watchlistService.add(params.filmId as string, user.id);
+    this.ok(res,fillDto(FilmRdo, result));
+  }
+
+  public async deleteFilmFromWatchList(
+    { params, user }: Request,
+    res: Response
+  ) {
+    const result = await this
+      .watchlistService.delete(params.filmId as string, user.id);
+    this.noContent(res,fillDto(FilmRdo, result));
   }
 
   public async create(

@@ -22,11 +22,6 @@ export interface FilmServiceInterface extends DocumentExistsInterface {
   //promo
   findPromoFilm(): Promise<DocumentType<FilmEntity>[]>;
 
-  //watch-list
-  findWatchListFilms(): Promise<DocumentType<FilmEntity>[]>;
-  deleteFilmFromWatchList(filmId: string): Promise<DocumentType<FilmEntity> | null>;
-  addFilmToWatchList(filmId: string): Promise<DocumentType<FilmEntity> | null>;
-
   //general
   findByFilmNameOrCreate(filmName: string, dto: CreateFilmDto): Promise<DocumentType<FilmEntity>>;
   incCommentsCount(filmId: string): Promise<DocumentType<FilmEntity> | null>;

@@ -82,25 +82,6 @@ export default class FilmService implements FilmServiceInterface {
       .exec();
   }
 
-  //watch-list
-  public async findWatchListFilms(): Promise<DocumentType<FilmEntity>[]> {
-    return this.filmModel
-      .find({watchList: true})
-      .exec();
-  }
-
-  public async deleteFilmFromWatchList(filmId: string): Promise<DocumentType<FilmEntity> | null> {
-    return this.filmModel
-      .findByIdAndUpdate(filmId, {watchList: false}, {new: true})
-      .exec();
-  }
-
-  public async addFilmToWatchList(filmId: string): Promise<DocumentType<FilmEntity> | null> {
-    return this.filmModel
-      .findByIdAndUpdate(filmId, {watchList: true}, {new: true})
-      .exec();
-  }
-
   //general
   public async findByFilmNameOrCreate(filmName: string, dto: CreateFilmDto): Promise<DocumentType<FilmEntity>> {
     const existedFilm = await this.findByFilmName(filmName);

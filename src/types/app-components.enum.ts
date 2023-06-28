@@ -13,4 +13,5 @@ export const AppComponent = {
   ExceptionFilterInterface: Symbol.for('ExceptionFilterInterface'),
   UserController: Symbol.for('UserController'),
   CommentController: Symbol.for('CommentController'),
+  WatchlistServiceInterface: Symbol.for('WatchlistServiceInterface'),
 } as const;
