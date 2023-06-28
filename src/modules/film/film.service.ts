@@ -72,14 +72,13 @@ export default class FilmService implements FilmServiceInterface {
 
   //promo
   public async findPromoFilm(): Promise<DocumentType<FilmEntity>[]> {
-    const randomIndex = Math.floor(Math.random() * 10);
+    const randomIndex = Math.floor(Math.random() * this.filmModel.length);
 
     return this.filmModel
       .find({}, {}, {
         limit: 1,
         skip: randomIndex
       })
-      .populate('user')
       .exec();
   }
 

@@ -4,7 +4,6 @@ import {
   IsDateString,
   IsEnum,
   IsInt,
-  IsMongoId,
   IsString,
   Matches,
   MaxLength,
@@ -32,7 +31,8 @@ export default class CreateFilmDto {
   @IsDateString({}, {message: 'publicationDate must be a valid ISO date'})
   public publicationDate!: Date;
 
-  @IsEnum(Genre, {message: 'genre must be a valid Genre'})
+  @IsEnum(Genre, {each: true, message: 'genre must be a valid Genre'})
+  @IsArray({message: 'genre must be an array'})
   public genre!: Genre[];
 
   @IsDateString({}, {message: 'realiseDate must be a valid ISO date'})
@@ -58,7 +58,6 @@ export default class CreateFilmDto {
   @IsInt({message: 'duration must be an integer'})
   public duration!: number;
 
-  @IsMongoId({each: true, message: 'user must be a valid ObjectId'})
   public user!: string;
 
   @IsString({message: 'poster is required'})

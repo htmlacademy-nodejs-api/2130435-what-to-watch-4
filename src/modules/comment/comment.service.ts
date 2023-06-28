@@ -19,8 +19,9 @@ export default class CommentService implements CommentServiceInterface {
 
   public async findByFilmId(filmId: string): Promise<DocumentType<CommentEntity>[]> {
     return this.commentModel
-      .find({film: filmId})
-      .populate('user')
-      .sort({createdAt: SortType.Asc});
+      .find({filmId})
+      .populate(['user', 'filmId'])
+      .sort({createdAt: SortType.Asc})
+      .exec();
   }
 }

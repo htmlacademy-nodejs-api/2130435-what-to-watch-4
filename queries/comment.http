@@ -1,16 +1,16 @@
 # create comment
 POST http://localhost:4000/films/6476760e8562478c829d5b41/comments HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXItdGVzdEBtYWlsLmNvbSIsImlkIjoiNjQ5YzEyMjgzZTVjZDA5OTEyM2YxYjcxIiwiaWF0IjoxNjg3OTU5NzE1LCJleHAiOjE2ODgxMzI1MTV9.bWbkjoGrEvGCygW1xdjPXSGXD2Da7nRZBq_sLzL3BBc
 
 {
   "text": "text for comment text for comment text for comment text for comment text for comment ",
   "rating": 3,
-  "filmId": "6476760e8562478c829d5b41",
-  "user": "6476760e8562478c829d5b3f"
+  "filmId": "6476760e8562478c829d5b41"
 }
 ###
 
-# show comment for filmId странный ответ – []
+# show comment for filmId
 GET http://localhost:4000/films/6476760e8562478c829d5b41/comments HTTP/1.1
 Content-Type: application/json
 ###

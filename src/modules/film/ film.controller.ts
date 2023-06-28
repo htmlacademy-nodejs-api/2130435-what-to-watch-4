@@ -20,6 +20,9 @@ import {ValidateDtoMiddleware} from '../../core/middleware/validate-dto.middlewa
 import UpdateFilmDto from './dto/update-film.dto.js';
 import {DocumentExistsMiddleware} from '../../core/middleware/document-exists.middleware.js';
 import {ValidateGenreMiddleware} from '../../core/middleware/validate-genre.middleware.js';
+import {PrivateRouteMiddleware} from '../../core/middleware/private-route.middleware.js';
+import {CheckUserMiddleware} from '../../core/middleware/check-user.middleware.js';
+import FilmListRdo from './rdo/film-list.rdo.js';
 
 @injectable()
 export default class FilmController extends Controller {
@@ -38,8 +41,15 @@ export default class FilmController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new ValidateDtoMiddleware(CreateFilmDto)
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateFilmDto),
       ]
+    });
+
+    this.addRoute({
+      path: '/promo/',
+      method: HttpMethod.Get,
+      handler: this.showPromo,
     });
 
     this.addRoute({
@@ -56,8 +66,10 @@ export default class FilmController extends Controller {
       method: HttpMethod.Put,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('filmId'),
         new ValidateDtoMiddleware(UpdateFilmDto),
+        new CheckUserMiddleware(this.filmsService, 'Film', 'filmId'),
         new DocumentExistsMiddleware(this.filmsService, 'Film', 'filmId')
       ]
     });
@@ -66,7 +78,9 @@ export default class FilmController extends Controller {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('filmId'),
+        new CheckUserMiddleware(this.filmsService, 'Film', 'filmId'),
         new DocumentExistsMiddleware(this.filmsService, 'Film', 'filmId')
       ]
     });
@@ -80,9 +94,22 @@ export default class FilmController extends Controller {
       ]
     });
 
-    this.addRoute({path: '/promo', method: HttpMethod.Get, handler: this.showPromo });
+    this.addRoute({
+      path: '/promo/',
+      method: HttpMethod.Get,
+      handler: this.showPromo,
+    });
 
-    this.addRoute({path: '/watch-list', method: HttpMethod.Get, handler: this.indexWatchList });
+
+    //watch-list
+    this.addRoute({
+      path: '/watch-list',
+      method: HttpMethod.Get,
+      handler: this.indexWatchList,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+      ]
+    });
     // this.addRoute({path: '/watch-list/:filmId', method: HttpMethod.Post, handler: this.create });
     // this.addRoute({path: '/watch-list/:filmId', method: HttpMethod.Delete, handler: this.create });
 
@@ -92,6 +119,7 @@ export default class FilmController extends Controller {
       method: HttpMethod.Post,
       handler: this.createComment,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('filmId'),
         new ValidateDtoMiddleware(CreateCommentDto),
         new DocumentExistsMiddleware(this.filmsService, 'Film', 'filmId')
@@ -116,7 +144,7 @@ export default class FilmController extends Controller {
     const {query} = req;
     const films = await this
       .filmsService.find(query.limit, query.offset);
-    const filmsToResponse = fillDto(FilmRdo, films);
+    const filmsToResponse = fillDto(FilmListRdo, films);
     this.ok(res, filmsToResponse);
   }
 
@@ -130,7 +158,7 @@ export default class FilmController extends Controller {
   public async indexGenre(req: Request, res: Response) {
     const films = await this
       .filmsService.findByGenre(req.params.genre as Genre);
-    const filmsToResponse = fillDto(FilmRdo, films);
+    const filmsToResponse = fillDto(FilmListRdo, films);
     this.ok(res, filmsToResponse);
   }
 
@@ -144,18 +172,18 @@ export default class FilmController extends Controller {
   public async indexWatchList(_req: Request, res: Response) {
     const films = await this
       .filmsService.findWatchListFilms();
-    const filmsToResponse = fillDto(FilmRdo, films);
+    const filmsToResponse = fillDto(FilmListRdo, films);
     this.ok(res, filmsToResponse);
   }
 
   public async create(
-    { body }: Request<
+    { body, user }: Request<
       Record<string, unknown>, Record<string, unknown>, CreateFilmDto
     >,
     res: Response
   ) {
     const result = await this
-      .filmsService.create(body);
+      .filmsService.create({...body, user: user.id});
     const film = await this.filmsService.findByFilmId(result.id);
     this.created(res,fillDto(FilmRdo, film));
   }
@@ -198,18 +226,20 @@ export default class FilmController extends Controller {
   ) {
     const comments = await this
       .commentsService.findByFilmId(params.filmId);
+    console.log(comments);
     const commentsToResponse = fillDto(CommentRdo, comments);
     this.ok(res, commentsToResponse);
   }
 
   public async createComment(
-    {body, params}: Request<{filmId: string}, object, CreateCommentDto>,
+    {body, params, user}: Request,
     res: Response
   ) {
 
     const comment = await this
-      .commentsService.create({...body, filmId: params.filmId});
+      .commentsService.create({...body, filmId: params.filmId, user: user.id});
     await this.filmsService.incCommentsCount(body.filmId);
+    await this.filmsService.calcRating(body.filmId);
     this.created(res, fillDto(CommentRdo, comment));
   }
 }

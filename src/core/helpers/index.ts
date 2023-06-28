@@ -5,3 +5,4 @@ export * from './db.js';
 export * from './password-hasher.js';
 export * from './fill-dto.js';
 export * from './createErrorObject.js';
+export * from './createJWT.js';

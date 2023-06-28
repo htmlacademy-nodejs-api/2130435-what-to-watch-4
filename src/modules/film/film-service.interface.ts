@@ -30,6 +30,6 @@ export interface FilmServiceInterface extends DocumentExistsInterface {
   //general
   findByFilmNameOrCreate(filmName: string, dto: CreateFilmDto): Promise<DocumentType<FilmEntity>>;
   incCommentsCount(filmId: string): Promise<DocumentType<FilmEntity> | null>;
-  calcRating(filmId: string, rating: number): Promise<DocumentType<FilmEntity> | null>;
+  calcRating(filmId: string): Promise<DocumentType<FilmEntity> | null>;
   exists(documentId: string): Promise<boolean>;
 }
