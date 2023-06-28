@@ -4,7 +4,6 @@ import {
   IsDateString,
   IsEnum,
   IsInt,
-  IsMongoId,
   IsString,
   Matches,
   MaxLength,
@@ -58,7 +57,6 @@ export default class CreateFilmDto {
   @IsInt({message: 'duration must be an integer'})
   public duration!: number;
 
-  @IsMongoId({each: true, message: 'user must be a valid ObjectId'})
   public user!: string;
 
   @IsString({message: 'poster is required'})
