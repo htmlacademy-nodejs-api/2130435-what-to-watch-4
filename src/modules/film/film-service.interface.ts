@@ -3,8 +3,9 @@ import CreateFilmDto from './dto/create-film.dto.js';
 import { FilmEntity } from './film.entity.js';
 import {Genre} from '../../types/film.type.js';
 import UpdateFilmDto from './dto/update-film.dto.js';
+import {DocumentExistsInterface} from '../../types/document-exists.interface.js';
 
-export interface FilmServiceInterface {
+export interface FilmServiceInterface extends DocumentExistsInterface {
   //films
   create(dto: CreateFilmDto): Promise<DocumentType<FilmEntity>>;
   find(limitQuery?: number, skipQuery?: number): Promise<DocumentType<FilmEntity>[]>;
@@ -19,7 +20,7 @@ export interface FilmServiceInterface {
   findByGenre(genre: Genre): Promise<DocumentType<FilmEntity>[]>;
 
   //promo
-  findPromoFilm(): Promise<DocumentType<FilmEntity> | null>;
+  findPromoFilm(): Promise<DocumentType<FilmEntity>[]>;
 
   //watch-list
   findWatchListFilms(): Promise<DocumentType<FilmEntity>[]>;

@@ -2,6 +2,7 @@ import {IsEmail, IsOptional, IsString, Matches, MaxLength, MinLength} from 'clas
 import {UserPasswordValid} from '../../../types/validate-params.enum.js';
 
 export default class CreateUserDto {
+  @IsString({message: 'name is required'})
   public name!: string;
 
   @IsString({message: 'email is required'})
