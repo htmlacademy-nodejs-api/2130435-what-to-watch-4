@@ -71,13 +71,15 @@ export default class FilmService implements FilmServiceInterface {
   }
 
   //promo
-  public async findPromoFilm(): Promise<DocumentType<FilmEntity> | null> {
-    const count = await this.filmModel.countDocuments();
-    const randomIndex = Math.floor(Math.random() * count);
+  public async findPromoFilm(): Promise<DocumentType<FilmEntity>[]> {
+    const randomIndex = Math.floor(Math.random() * 10);
 
     return this.filmModel
-      .findOne()
-      .skip(randomIndex)
+      .find({}, {}, {
+        limit: 1,
+        skip: randomIndex
+      })
+      .populate('user')
       .exec();
   }
 

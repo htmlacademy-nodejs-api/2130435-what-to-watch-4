@@ -3,14 +3,13 @@ import {Controller} from '../../core/controller/controller.abstract.js';
 import {AppComponent} from '../../types/app-components.enum.js';
 import {LoggerInterface} from '../../core/logger/logger.interface.js';
 import {HttpMethod} from '../../types/http-method.enum.js';
-import { Request, Response} from 'express';
+import {Request, Response} from 'express';
 import {FilmServiceInterface} from './film-service.interface.js';
 import FilmRdo from './rdo/film.rdo.js';
 import {fillDto} from '../../core/helpers/index.js';
 import CreateFilmDto from './dto/create-film.dto.js';
 import {StatusCodes} from 'http-status-codes';
 import {Genre} from '../../types/film.type.js';
-import HttpError from '../../core/errors/http-error.js';
 import {RequestQuery} from '../../types/request-query.type.js';
 import * as core from 'express-serve-static-core';
 import {CommentServiceInterface} from '../comment/comment-service.interface.js';
@@ -19,6 +18,8 @@ import CommentRdo from '../comment/rdo/comment.rdo.js';
 import {ValidateObjectIdMiddleware} from '../../core/middleware/validate-objectid.middleware.js';
 import {ValidateDtoMiddleware} from '../../core/middleware/validate-dto.middleware.js';
 import UpdateFilmDto from './dto/update-film.dto.js';
+import {DocumentExistsMiddleware} from '../../core/middleware/document-exists.middleware.js';
+import {ValidateGenreMiddleware} from '../../core/middleware/validate-genre.middleware.js';
 
 @injectable()
 export default class FilmController extends Controller {
@@ -46,7 +47,8 @@ export default class FilmController extends Controller {
       method: HttpMethod.Get,
       handler: this.show,
       middlewares: [
-        new ValidateObjectIdMiddleware('filmId')
+        new ValidateObjectIdMiddleware('filmId'),
+        new DocumentExistsMiddleware(this.filmsService, 'Film', 'filmId')
       ]
     });
     this.addRoute({
@@ -55,7 +57,8 @@ export default class FilmController extends Controller {
       handler: this.update,
       middlewares: [
         new ValidateObjectIdMiddleware('filmId'),
-        new ValidateDtoMiddleware(UpdateFilmDto)
+        new ValidateDtoMiddleware(UpdateFilmDto),
+        new DocumentExistsMiddleware(this.filmsService, 'Film', 'filmId')
       ]
     });
     this.addRoute({
@@ -63,14 +66,18 @@ export default class FilmController extends Controller {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
-        new ValidateObjectIdMiddleware('filmId')
+        new ValidateObjectIdMiddleware('filmId'),
+        new DocumentExistsMiddleware(this.filmsService, 'Film', 'filmId')
       ]
     });
 
     this.addRoute({
-      path: '/:genre',
+      path: '/genre/:genre',
       method: HttpMethod.Get,
-      handler: this.indexGenre
+      handler: this.indexGenre,
+      middlewares: [
+        new ValidateGenreMiddleware('genre')
+      ]
     });
 
     this.addRoute({path: '/promo', method: HttpMethod.Get, handler: this.showPromo });
@@ -86,7 +93,8 @@ export default class FilmController extends Controller {
       handler: this.createComment,
       middlewares: [
         new ValidateObjectIdMiddleware('filmId'),
-        new ValidateDtoMiddleware(CreateCommentDto)
+        new ValidateDtoMiddleware(CreateCommentDto),
+        new DocumentExistsMiddleware(this.filmsService, 'Film', 'filmId')
       ]
     });
     this.addRoute({
@@ -94,7 +102,8 @@ export default class FilmController extends Controller {
       method: HttpMethod.Get,
       handler: this.indexComments,
       middlewares: [
-        new ValidateObjectIdMiddleware('filmId')
+        new ValidateObjectIdMiddleware('filmId'),
+        new DocumentExistsMiddleware(this.filmsService, 'Film', 'filmId'),
       ]
     });
   }
@@ -145,18 +154,10 @@ export default class FilmController extends Controller {
     >,
     res: Response
   ) {
-    const existFilm = await this
-      .filmsService.findByFilmTitle(body.title);
-
-    if (existFilm) {
-      const errorMessage = `Film with title ${body.title} already exists`;
-      this.send(res, StatusCodes.UNPROCESSABLE_ENTITY, errorMessage);
-      return this.logger.error(errorMessage);
-    }
-
     const result = await this
-      .filmsService.findByFilmNameOrCreate(body.title,body);
-    this.created(res,fillDto(FilmRdo, result));
+      .filmsService.create(body);
+    const film = await this.filmsService.findByFilmId(result.id);
+    this.created(res,fillDto(FilmRdo, film));
   }
 
   public async update(
@@ -165,17 +166,6 @@ export default class FilmController extends Controller {
     >,
     res: Response
   ) {
-    const updateFilm = await this
-      .filmsService.findByFilmId(params.filmId as string);
-
-    if (!updateFilm) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Film with id ${params.filmId} not find`,
-        'FilmController.update'
-      );
-    }
-
     const result = await this
       .filmsService.updateFilmById(params.filmId as string, body);
     this.created(res,fillDto(FilmRdo, result));
@@ -203,30 +193,22 @@ export default class FilmController extends Controller {
 
   //comment
   public async indexComments(
-    _req: Request,
-    _res: Response
+    {params}: Request,
+    res: Response
   ) {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Method not implemented.',
-      'CommentController'
-    );
+    const comments = await this
+      .commentsService.findByFilmId(params.filmId);
+    const commentsToResponse = fillDto(CommentRdo, comments);
+    this.ok(res, commentsToResponse);
   }
 
   public async createComment(
-    {body}: Request<object, object, CreateCommentDto>,
+    {body, params}: Request<{filmId: string}, object, CreateCommentDto>,
     res: Response
   ) {
-    if (!await this.filmsService.exists(body.filmId)) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Film with ${body.filmId} not found.`,
-        'CommentController'
-      );
-    }
 
     const comment = await this
-      .commentsService.create(body);
+      .commentsService.create({...body, filmId: params.filmId});
     await this.filmsService.incCommentsCount(body.filmId);
     this.created(res, fillDto(CommentRdo, comment));
   }

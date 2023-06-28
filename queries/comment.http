@@ -1,0 +1,16 @@
+# create comment
+POST http://localhost:4000/films/6476760e8562478c829d5b41/comments HTTP/1.1
+Content-Type: application/json
+
+{
+  "text": "text for comment text for comment text for comment text for comment text for comment ",
+  "rating": 3,
+  "filmId": "6476760e8562478c829d5b41",
+  "user": "6476760e8562478c829d5b3f"
+}
+###
+
+# show comment for filmId странный ответ – []
+GET http://localhost:4000/films/6476760e8562478c829d5b41/comments HTTP/1.1
+Content-Type: application/json
+###

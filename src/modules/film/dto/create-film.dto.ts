@@ -36,7 +36,7 @@ export default class CreateFilmDto {
   public genre!: Genre[];
 
   @IsDateString({}, {message: 'realiseDate must be a valid ISO date'})
-  public realiseDate!: string;
+  public realiseDate!: Date;
 
   @IsString({message: 'previewVideo is required'})
   public previewVideo!: string;

@@ -36,7 +36,7 @@ export default class UpdateFilmDto {
 
   @IsOptional()
   @IsDateString({}, {message: 'realiseDate must be a valid ISO date'})
-  public realiseDate?: string;
+  public realiseDate?: Date;
 
   @IsOptional()
   @IsString({message: 'previewVideo is required'})

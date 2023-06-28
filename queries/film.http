@@ -1,0 +1,55 @@
+# get film list
+GET http://localhost:4000/films HTTP/1.1
+Content-Type: application/json
+###
+
+# get film by filmId
+GET http://localhost:4000/films/6476760e8562478c829d5b41 HTTP/1.1
+Content-Type: application/json
+###
+
+# get promo film -- ошибка obectId???
+GET http://localhost:4000/films/promo HTTP/1.1
+Content-Type: application/json
+###
+
+# change film by filmId
+PUT http://localhost:4000/films/6476760e8562478c829d5b41 HTTP/1.1
+Content-Type: application/json
+
+{
+  "duration": 50
+}
+###
+
+#create new film error 400 bad requst
+POST http://localhost:4000/films HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Film title 1",
+  "description": "Film description Film description Film description Film description Film description ",
+  "publicationDate": "2022-05-12T11:56:37.573Z",
+  "genre": ["thriller", "comedy"],
+  "realiseDate": "2022-05-12T11:56:37.573Z",
+  "previewVideo": "http://previewVideo.com",
+  "videoLink": "http://videoLink.com",
+  "actors": ["Bill M", "Michael St"],
+  "director": "director",
+  "duration": 120,
+  "posterImage": "posterImage.jpg",
+  "backgroundImage": "backgroundImage.jpg",
+  "backgroundColor": "#FFFFFF",
+  "user": "6476760e8562478c829d5b3f"
+}
+###
+
+# get films by genre
+GET http://localhost:4000/films/genre/thriller HTTP/1.1
+Content-Type: application/json
+###
+
+# delete films by filmID
+DELETE http://localhost:4000/films/6476760e8562478c829d5b53 HTTP/1.1
+Content-Type: application/json
+###
