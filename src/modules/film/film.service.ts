@@ -72,33 +72,13 @@ export default class FilmService implements FilmServiceInterface {
 
   //promo
   public async findPromoFilm(): Promise<DocumentType<FilmEntity>[]> {
-    const randomIndex = Math.floor(Math.random() * 10);
+    const randomIndex = Math.floor(Math.random() * this.filmModel.length);
 
     return this.filmModel
       .find({}, {}, {
         limit: 1,
         skip: randomIndex
       })
-      .populate('user')
-      .exec();
-  }
-
-  //watch-list
-  public async findWatchListFilms(): Promise<DocumentType<FilmEntity>[]> {
-    return this.filmModel
-      .find({watchList: true})
-      .exec();
-  }
-
-  public async deleteFilmFromWatchList(filmId: string): Promise<DocumentType<FilmEntity> | null> {
-    return this.filmModel
-      .findByIdAndUpdate(filmId, {watchList: false}, {new: true})
-      .exec();
-  }
-
-  public async addFilmToWatchList(filmId: string): Promise<DocumentType<FilmEntity> | null> {
-    return this.filmModel
-      .findByIdAndUpdate(filmId, {watchList: true}, {new: true})
       .exec();
   }
 

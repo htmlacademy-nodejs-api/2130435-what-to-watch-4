@@ -8,26 +8,28 @@ GET http://localhost:4000/films/6476760e8562478c829d5b41 HTTP/1.1
 Content-Type: application/json
 ###
 
-# get promo film -- ошибка obectId???
+# get promo film
 GET http://localhost:4000/films/promo HTTP/1.1
 Content-Type: application/json
 ###
 
 # change film by filmId
-PUT http://localhost:4000/films/6476760e8562478c829d5b41 HTTP/1.1
+PUT http://localhost:4000/films/649c63516a332d7bda5711db HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXItdGVzdEBtYWlsLmNvbSIsImlkIjoiNjQ5YzEyMjgzZTVjZDA5OTEyM2YxYjcxIiwiaWF0IjoxNjg3OTU5NzE1LCJleHAiOjE2ODgxMzI1MTV9.bWbkjoGrEvGCygW1xdjPXSGXD2Da7nRZBq_sLzL3BBc
 
 {
   "duration": 50
 }
 ###
 
-#create new film error 400 bad requst
+#create new film
 POST http://localhost:4000/films HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXItdGVzdEBtYWlsLmNvbSIsImlkIjoiNjQ5YzEyMjgzZTVjZDA5OTEyM2YxYjcxIiwiaWF0IjoxNjg3OTU5NzE1LCJleHAiOjE2ODgxMzI1MTV9.bWbkjoGrEvGCygW1xdjPXSGXD2Da7nRZBq_sLzL3BBc
 
 {
-  "title": "Film title 1",
+  "title": "Film title 11",
   "description": "Film description Film description Film description Film description Film description ",
   "publicationDate": "2022-05-12T11:56:37.573Z",
   "genre": ["thriller", "comedy"],
@@ -37,10 +39,9 @@ Content-Type: application/json
   "actors": ["Bill M", "Michael St"],
   "director": "director",
   "duration": 120,
-  "posterImage": "posterImage.jpg",
+  "poster": "posterImage.jpg",
   "backgroundImage": "backgroundImage.jpg",
-  "backgroundColor": "#FFFFFF",
-  "user": "6476760e8562478c829d5b3f"
+  "backgroundColor": "#FFFFFF"
 }
 ###
 
