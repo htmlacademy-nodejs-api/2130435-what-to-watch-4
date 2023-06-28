@@ -23,10 +23,14 @@ export default class FilmService implements FilmServiceInterface {
     return result;
   }
 
-  public async find(count?:number): Promise<DocumentType<FilmEntity>[]> {
-    const limit = count ?? DEFAULT_FILM_COUNT;
+  public async find(limitQuery?:number, skipQuery?:number): Promise<DocumentType<FilmEntity>[]> {
+    const limit = limitQuery ?? DEFAULT_FILM_COUNT;
+    const skip = skipQuery ?? 0;
     return this.filmModel
-      .find({}, {}, {limit})
+      .find({}, {}, {
+        skip,
+        limit
+      })
       .populate('user')
       .exec();
   }
