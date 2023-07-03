@@ -48,6 +48,34 @@ export default class FilmController extends Controller {
       ]
     });
 
+    //watch-list
+    this.addRoute({
+      path: '/watch-list',
+      method: HttpMethod.Get,
+      handler: this.indexWatchList,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+      ]
+    });
+    this.addRoute({
+      path: '/watch-list/:filmId',
+      method: HttpMethod.Post,
+      handler: this.addFilmToWatchList,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('filmId'),
+      ]
+    });
+    this.addRoute({
+      path: '/watch-list/:filmId',
+      method: HttpMethod.Delete,
+      handler: this.deleteFilmFromWatchList,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('filmId'),
+      ]
+    });
+
     this.addRoute({
       path: '/promo/',
       method: HttpMethod.Get,
@@ -100,35 +128,6 @@ export default class FilmController extends Controller {
       path: '/promo/',
       method: HttpMethod.Get,
       handler: this.showPromo,
-    });
-
-
-    //watch-list
-    this.addRoute({
-      path: '/watch-list',
-      method: HttpMethod.Get,
-      handler: this.indexWatchList,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-      ]
-    });
-    this.addRoute({
-      path: '/watch-list/:filmId',
-      method: HttpMethod.Post,
-      handler: this.addFilmToWatchList,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('filmId'),
-      ]
-    });
-    this.addRoute({
-      path: '/watch-list/:filmId',
-      method: HttpMethod.Delete,
-      handler: this.deleteFilmFromWatchList,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('filmId'),
-      ]
     });
 
     //comment

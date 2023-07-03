@@ -34,7 +34,7 @@ export function createFilm(filmData: string): Film {
     description,
     publicationDate: new Date(publicationDate),
     genre: genre.split(','),
-    realiseDate,
+    realiseDate: new Date(realiseDate),
     rating: +rating,
     previewVideo,
     videoLink,

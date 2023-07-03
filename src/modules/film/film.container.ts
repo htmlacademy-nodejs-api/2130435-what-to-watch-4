@@ -6,7 +6,7 @@ import { AppComponent } from '../../types/app-components.enum.js';
 import FilmService from './film.service.js';
 import {ControllerInterface} from '../../core/controller/controller.interface.js';
 import FilmController from './ film.controller.js';
-import WatchlistService from './watchlist.service';
+import WatchlistService from './watchlist.service.js';
 
 export function createFilmContainer() {
   const filmContainer = new Container();
