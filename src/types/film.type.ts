@@ -17,7 +17,7 @@ export interface Film {
   description: string;
   publicationDate: Date;
   genre: Genre[];
-  realiseDate: string;
+  realiseDate: Date;
   rating: number;
   previewVideo: string;
   videoLink: string;

@@ -14,8 +14,10 @@ import UserService from '../../modules/user/user.service.js';
 import MongoClientService from '../database-client/mongo-client.service.js';
 import {Film} from '../../types/film.type.js';
 
-const DEFAULT_DB_PORT = '27017';
-const DEFAULT_USER_PASSWORD = '123456';
+enum Default {
+  DbPort = '27017',
+  UserPassword = '123456',
+}
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name: CommandName = CommandName.Import;
@@ -38,7 +40,7 @@ export default class ImportCommand implements CliCommandInterface {
   private async saveFilm(film: Film) {
     const user = await this.userService.findOrCreate({
       ...film.user,
-      password: DEFAULT_USER_PASSWORD,
+      password: Default.UserPassword,
     }, this.salt);
 
     await this.filmService.create({
@@ -66,7 +68,7 @@ export default class ImportCommand implements CliCommandInterface {
     host: string,
     dbname: string,
     salt: string): Promise<void> {
-    const uri = getMongoURI(login, password, host, DEFAULT_DB_PORT, dbname);
+    const uri = getMongoURI(login, password, host, Default.DbPort, dbname);
     this.salt = salt;
 
     await this.databaseService.connect(uri);
